@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>WebSocket Namespace Example</title>
+    <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
+</head>
+<body>
+    <h1>WebSocket Namespace Example</h1>
+    <button id="joinRoomButton">Join Room</button>
+    <button id="leaveRoomButton">Leave Room</button>
+    <button id="sendDataButton">Send Data</button>
+    <script>
+        // Replace with your local server URL
+        const serverUrl = 'ws://localhost:5000';
+
+        // Establish WebSocket connection with namespace
+        const socket = io(`${serverUrl}/conversation`, {
+            transports: ['websocket'],
+            reconnection: true,
+            reconnectionAttempts: Infinity,
+            reconnectionDelay: 1000,
+            reconnectionDelayMax: 5000
+        });
+
+        socket.on('connect', () => {
+            console.log('Connected to server');
+        });
+
+        socket.on('disconnect', () => {
+            console.log('Disconnected from server');
+        });
+
+        socket.on('v1_conversation', (data) => {
+            console.log('Received v1_conversation response:', data);
+        });
+
+        // Function to join a room
+        function joinRoom(conversationId) {
+            socket.emit('join_room', { conversation_id: conversationId });
+        }
+
+        // Function to leave a room
+        function leaveRoom(conversationId) {
+            socket.emit('leave_room', { conversation_id: conversationId });
+        }
+
+        // Function to send data
+        function sendData(conversationId, data) {
+            socket.emit('v1_conversation', { conversation_id: conversationId, message: data });
+        }
+
+        // Add event listeners to the buttons
+        document.getElementById('joinRoomButton').addEventListener('click', () => {
+            const conversationId = prompt('Enter conversation ID to join:');
+            if (conversationId) {
+                joinRoom(conversationId);
+            }
+        });
+
+        document.getElementById('leaveRoomButton').addEventListener('click', () => {
+            const conversationId = prompt('Enter conversation ID to leave:');
+            if (conversationId) {
+                leaveRoom(conversationId);
+            }
+        });
+
+        document.getElementById('sendDataButton').addEventListener('click', () => {
+            const conversationId = prompt('Enter conversation ID to send data to:');
+            const data = prompt('Enter data:');
+            if (conversationId && data) {
+                sendData(conversationId, data);
+            }
+        });
+    </script>
+</body>
+</html>
