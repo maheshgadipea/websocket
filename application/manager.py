@@ -13,3 +13,12 @@ def create_conversation(data,socket_emit):
     import time
     time.sleep(5)
     return  str(response)
+
+
+def test_task(socketio_instance):
+    print("Background task started")
+    a = 0
+    while a < 6:
+        print(f"My count is {a}")
+        socketio_instance.sleep(3)
+        a += 1

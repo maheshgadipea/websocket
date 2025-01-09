@@ -3,6 +3,7 @@ from flask_socketio import SocketIO
 import os
 from flask import Flask, render_template, request, jsonify, session
 from websocket import WebSocketHandler
+from manager import test_task
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret!'
@@ -16,4 +17,5 @@ socketio.on_namespace(WebSocketHandler('/conversation', socketio))
 
 @app.route('/')
 def index():
+    socketio.start_background_task(target=test_task, socketio_instance=socketio)
     return render_template('index.html')
