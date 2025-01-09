@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Socket.IO Test</title>
+    <script src="https://cdn.socket.io/4.5.1/socket.io.min.js"></script>
+</head>
+<body>
+    <h1>Socket.IO Conversation Test</h1>
+    <input type="text" id="conversationId" placeholder="Enter Conversation ID">
+    <button onclick="joinConversation()">Join Conversation</button>
+    <button onclick="leaveConversation()">Leave Conversation</button>
+    <br><br>
+    <input type="text" id="question" placeholder="Ask a Question">
+    <button onclick="askQuestion()">Ask</button>
+    <div id="responses"></div>
+
+    <script>
+        var socket = io.connect('ws://' + document.domain + ':' + location.port + '/conversation', {
+        transports: ['websocket']
+        });
+
+        socket.on('connect', () => {
+            console.log('Connected to server');
+        });
+
+        socket.on('message_response', (data) => {
+            console.log('Message:', data);
+        });
+
+        socket.on('answer', (data) => {
+            console.log("Data in")
+            const responseDiv = document.getElementById('responses');
+            responseDiv.innerHTML += `<p>Answer: ${data.answer}</p>`;
+        });
+
+        socket.on('error', (data) => {
+            console.error('Error:', data.message);
+        });
+
+        function joinConversation() {
+            const conversationId = document.getElementById('conversationId').value;
+            socket.emit('join_conversation', { conversation_id: conversationId });
+        }
+
+        function leaveConversation() {
+            const conversationId = document.getElementById('conversationId').value;
+            socket.emit('leave_conversation', { conversation_id: conversationId });
+        }
+
+        function askQuestion() {
+            const conversationId = document.getElementById('conversationId').value;
+            const question = document.getElementById('question').value;
+            socket.emit('question', { conversation_id: conversationId, question: question });
+        }
+    </script>
+</body>
+</html>

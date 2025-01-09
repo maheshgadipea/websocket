@@ -1,0 +1,10 @@
+Flask==2.3.2
+Flask-SocketIO>=5.4.0  # Update Flask-SocketIO to the latest version
+gunicorn==22.0.0
+python-engineio  # Update python-engineio to a compatible version
+python-socketio>=5.8.0
+eventlet
+flask-session
+redis
+gevent-websocket>=0.10.1
+kombu
