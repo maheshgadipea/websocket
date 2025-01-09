@@ -17,5 +17,10 @@ socketio.on_namespace(WebSocketHandler('/conversation', socketio))
 
 @app.route('/')
 def index():
-    socketio.start_background_task(target=test_task, socketio_instance=socketio)
     return render_template('index.html')
+
+
+@app.route('/start-task', methods=['POST'])
+def start_task():
+    socketio.start_background_task(target=test_task, socketio_instance=socketio)
+    return jsonify({"status": "Background task started"}), 200
