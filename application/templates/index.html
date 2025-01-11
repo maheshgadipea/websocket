@@ -17,7 +17,9 @@
     <div id="responses"></div>
 
     <script>
-        var socket = io.connect('ws://' + document.domain + ':' + location.port + '/conversation', {
+
+
+        var socket = io.connect('https://' + document.domain + ':' + location.port + '/conversation', {
         transports: ['websocket']
         });
 
@@ -25,35 +27,41 @@
             console.log('Connected to server');
         });
 
-        socket.on('message_response', (data) => {
-            console.log('Message:', data);
-        });
-
-        socket.on('answer', (data) => {
-            console.log("Data in")
-            const responseDiv = document.getElementById('responses');
-            responseDiv.innerHTML += `<p>Answer: ${data.answer}</p>`;
-        });
-
-        socket.on('error', (data) => {
-            console.error('Error:', data.message);
-        });
 
         function joinConversation() {
             const conversationId = document.getElementById('conversationId').value;
             socket.emit('join_conversation', { conversation_id: conversationId });
         }
 
-        function leaveConversation() {
-            const conversationId = document.getElementById('conversationId').value;
-            socket.emit('leave_conversation', { conversation_id: conversationId });
-        }
+
+        socket.on('joined_conversation', (data) => {
+            console.log("Data in")
+            data.status
+            data.conversation_id
+            const responseDiv = document.getElementById('responses');
+            responseDiv.innerHTML += `<p>Answer: ${data.answer}</p>`;
+        });
+
 
         function askQuestion() {
             const conversationId = document.getElementById('conversationId').value;
             const question = document.getElementById('question').value;
             socket.emit('question', { conversation_id: conversationId, question: question });
         }
+
+         socket.on('answer', (data) => {
+            data.ai_output
+            data.code
+            console.log("Data in")
+            const responseDiv = document.getElementById('responses');
+            responseDiv.innerHTML += `<p>Answer: ${data.answer}</p>`;
+        });
+
+        socket.emit('disconnect', () => {
+            console.log('Connected to server');
+        });
+
+
     </script>
 </body>
 </html>

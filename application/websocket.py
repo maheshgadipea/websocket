@@ -34,10 +34,9 @@ class AbstractSocketHandler(ABC, Namespace):
         # test_function(data, self.emit)
         pass
 
-class ConversationSocketHandler(Namespace):
-    def __init__(self, namespace, socket):
+class ConversationSocketHandler(AbstractSocketHandler):
+    def __init__(self, namespace):
         super().__init__(namespace)
-        self.socketio = socket
 
     def on_connect(self):
         print(f'Client connected with session ID: {request.sid}')
@@ -53,6 +52,9 @@ class ConversationSocketHandler(Namespace):
                 leave_room(room)
                 print(f'Client left room: {room}')
         join_room(conversation_id)
+
+        self.emit("joined_conversation",{'conversation_id': conversation_id, "status": "success"})
+
         print(f'Client joined room: {conversation_id}')
 
     def on_leave_conversation(self, data):
@@ -66,7 +68,6 @@ class ConversationSocketHandler(Namespace):
         print(f"Currently inside question function with id is : {conversation_id}")
 
         # call the create_conversation function and always provide the emit function
-        data = {'conversation_id': conversation_id, 'message': message}
         response = create_conversation(data,self.emit)
 
         # Emit the response back to the client
