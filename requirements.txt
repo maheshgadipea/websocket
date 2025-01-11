@@ -79,7 +79,6 @@ install_requires=[
         "matplotlib==3.7.1",
         "matplotlib-inline==0.1.6",
         "mistune==2.0.5",
-        "mosaic-common-utils[common]@git+https://gitlab+deploy-token-5:gldt-bKGs8CqGKn71DAPQBDyy@gitlab.fosfor.com/fosfor-decision-cloud/intelligence/mosaic-common-utils.git",
         "multidict==6.0.4",
         "mypy-extensions==1.0.0",
         "nbclassic==1.0.0",
