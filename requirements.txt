@@ -9,6 +9,26 @@ redis
 gevent-websocket>=0.10.1
 kombu
 ====
+socketio = SocketIO(application,path='/refract/common/api/v1/socket.io', message_queue=application.config['RAABITMQ_URL'],async_mode='eventlet')
+
+
+import { io } from "socket.io-client";
+import { getCsrfTokenfromCookie } from "../../decision/components/Util";
+
+export const copilotSocket = io("https://feature-fdc-15818.features.dev.fdc.leni.ai/", {
+    path: "refract/common/api/v1/socket.io",
+    transports: ["websocket"],
+    autoConnect: false,
+    withCredentials: true,
+    extraHeaders: {
+        "x-xsrf-token": getCsrfTokenfromCookie(),
+    },
+});
+
+Fosfor
+
+
+==
 install_requires=[
         "numpy==1.26.4",
         "aiosignal==1.3.1",
